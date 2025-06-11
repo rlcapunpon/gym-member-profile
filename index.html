@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Member Profile</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="profile-container">
+    <div id="scanner-section" class="scanner-section">
+      <h2>Scan QR Code</h2>
+      <div id="qrScanner"></div>
+      <div id="scanStatus">Align the QR code within the frame.</div>
+    </div>
+    <div id="profile-section" class="profile-section" style="display:none;">
+      <h2>Profile</h2>
+      <div id="profileDetails"></div>
+      <div id="memberQrContainer" style="text-align:center; margin: 24px 0 0 0;"></div>
+      <button id="clearProfileBtn">Scan QR</button>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
+  <script src="qr-reader.js"></script>
+</body>
+</html>

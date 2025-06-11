@@ -1,0 +1,11 @@
+{
+  "name": "gym-member-profile",
+  "version": "1.0.0",
+  "description": "QR code reader for GitHub Pages",
+  "scripts": {
+    "deploy": "npx gh-pages -d ."
+  },
+  "devDependencies": {
+    "gh-pages": "^6.0.0"
+  }
+}
