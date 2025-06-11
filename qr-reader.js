@@ -33,6 +33,7 @@ function showProfile(data) {
   // Render QR code for 5-digit memberId
   const qrContainer = document.getElementById('memberQrContainer');
   qrContainer.innerHTML = '';
+  qrContainer.style.width = '100%';
   if (window.QRCode && data.memberId && /^\d{5}$/.test(data.memberId)) {
     const canvas = document.createElement('canvas');
     qrContainer.appendChild(canvas);
