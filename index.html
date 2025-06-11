@@ -34,13 +34,42 @@
     document.addEventListener('DOMContentLoaded', function() {
       const termsSection = document.getElementById('terms-section');
       const scannerSection = document.getElementById('scanner-section');
+      const profileSection = document.getElementById('profile-section');
       const proceedBtn = document.getElementById('proceedBtn');
       const acceptTerms = document.getElementById('acceptTerms');
+
+      // Check localStorage for acceptance
+      const termsAccepted = localStorage.getItem('termsAccepted') === 'true';
+      const hasProfile = !!localStorage.getItem('memberProfile');
+
+      if (termsAccepted) {
+        termsSection.style.display = 'none';
+        if (hasProfile) {
+          // Redirect to profile.html if profile exists and terms accepted
+          window.location.href = 'profile.html';
+          return;
+        } else {
+          scannerSection.style.display = '';
+          profileSection.style.display = 'none';
+        }
+      } else {
+        termsSection.style.display = '';
+        scannerSection.style.display = 'none';
+        profileSection.style.display = 'none';
+      }
+
       // Only show scanner if terms accepted
       proceedBtn.onclick = function() {
         if (acceptTerms.checked) {
+          localStorage.setItem('termsAccepted', 'true');
           termsSection.style.display = 'none';
-          scannerSection.style.display = '';
+          if (localStorage.getItem('memberProfile')) {
+            scannerSection.style.display = 'none';
+            profileSection.style.display = '';
+          } else {
+            scannerSection.style.display = '';
+            profileSection.style.display = 'none';
+          }
         } else {
           alert('You must accept the Terms and Privacy Policy to continue.');
         }
