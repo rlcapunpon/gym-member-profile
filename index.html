@@ -46,8 +46,7 @@
         const p = profiles[memberId];
         return `<div class="profile-list-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #222;">
           <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-weight:bold;">${p.memberName || memberId}</span>
-            <span style="color:#888;font-size:0.95em;">(${memberId})</span>
+            <span style="font-weight:bold;">${p.gymName || 'Unknown Gym'} (${memberId})</span>
           </div>
           <div>
             <button class="view-profile-btn" data-id="${memberId}" style="background:none;border:none;color:#1e90ff;cursor:pointer;font-size:1em;margin-right:10px;">View</button>
