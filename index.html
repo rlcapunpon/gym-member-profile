@@ -16,12 +16,13 @@
       </label>
       <button id="proceedBtn" style="padding:0.6em 1.5em;font-size:1em;border-radius:8px;border:2px solid #005fa3;background:#fff;color:#005fa3;cursor:pointer;transition:background 0.2s, color 0.2s;">Proceed</button>
     </div>
+    <div id="profiles-list-section" style="display:none; margin-bottom: 2em;"></div>
+    <button id="add-gym-btn" style="display:none;padding:0.7em 1.7em;font-size:1em;border-radius:8px;border:2px solid #005fa3;background:#fff;color:#005fa3;cursor:pointer;transition:background 0.2s, color 0.2s;margin-bottom:1.5em;">Add Gym</button>
     <div id="scanner-section" class="scanner-section" style="display:none;">
       <h2>New Gym</h2>
       <div id="qrScanner"></div>
       <div id="scanStatus">Scan QR code to add a new Gym</div>
     </div>
-    <div id="profiles-list-section" style="display:none; margin-bottom: 2em;"></div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
   <script src="qr-reader.js"></script>
@@ -79,6 +80,7 @@
       const profileSection = document.getElementById('profile-section');
       const proceedBtn = document.getElementById('proceedBtn');
       const acceptTerms = document.getElementById('acceptTerms');
+      const addGymBtn = document.getElementById('add-gym-btn');
 
       // Check localStorage for acceptance
       const termsAccepted = localStorage.getItem('termsAccepted') === 'true';
@@ -89,10 +91,11 @@
 
       if (termsAccepted) {
         termsSection.style.display = 'none';
-        scannerSection.style.display = '';
-        // Do NOT auto-redirect to profile.html
+        addGymBtn.style.display = '';
+        scannerSection.style.display = 'none';
       } else {
         termsSection.style.display = '';
+        addGymBtn.style.display = 'none';
         scannerSection.style.display = 'none';
       }
 
@@ -101,10 +104,15 @@
         if (acceptTerms.checked) {
           localStorage.setItem('termsAccepted', 'true');
           termsSection.style.display = 'none';
-          scannerSection.style.display = '';
+          addGymBtn.style.display = '';
+          scannerSection.style.display = 'none';
         } else {
           alert('You must accept the Terms and Privacy Policy to continue.');
         }
+      };
+      addGymBtn.onclick = function() {
+        addGymBtn.style.display = 'none';
+        scannerSection.style.display = '';
       };
       renderProfilesList();
     });
