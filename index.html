@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Member Profile</title>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
+  <script src="qr-reader.js"></script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -17,15 +19,13 @@
       <button id="proceedBtn" style="padding:0.6em 1.5em;font-size:1em;border-radius:8px;border:2px solid #005fa3;background:#fff;color:#005fa3;cursor:pointer;transition:background 0.2s, color 0.2s;">Proceed</button>
     </div>
     <div id="profiles-list-section" style="display:none; margin-bottom: 2em;"></div>
-    <button id="add-gym-btn" style="display:none;padding:0.7em 1.7em;font-size:1em;border-radius:8px;border:2px solid #005fa3;background:#fff;color:#005fa3;cursor:pointer;transition:background 0.2s, color 0.2s;margin-bottom:1.5em;">Add Gym</button>
+    <button id="add-gym-btn" style="display:none;padding:0.7em 1.7em;font-size:1em;border-radius:8px;border:2px solid #005fa3;background:#fff;color:#005fa3;cursor:pointer;transition:background 0.2s, color 0.2s;margin-bottom:1.5em;" onclick="window.location.href='scan.html'">Add Gym</button>
     <div id="scanner-section" class="scanner-section" style="display:none;">
       <h2>New Gym</h2>
       <div id="qrScanner"></div>
       <div id="scanStatus">Scan QR code to add a new Gym</div>
     </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
-  <script src="qr-reader.js"></script>
   <script>
     function renderProfilesList() {
       const section = document.getElementById('profiles-list-section');
@@ -34,26 +34,27 @@
         profiles = JSON.parse(localStorage.getItem('memberProfiles') || '{}');
       } catch {}
       const keys = Object.keys(profiles);
+      section.style.display = '';
+      section.innerHTML = `<div style="font-weight:bold;font-size:1.3em;margin-bottom:16px;letter-spacing:1px;color:#005fa3;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.5em;">🏋️‍♂️</span> Your Gyms <span style="font-size:1.1em;">💪</span>
+      </div>`;
       if (keys.length === 0) {
-        section.style.display = 'none';
-        section.innerHTML = '';
+        section.innerHTML += `<div style="color:#888;font-size:1.1em;margin-top:10px;text-align:center;">No gyms added yet. Click <b>Add Gym</b> to get started!</div>`;
         return;
       }
-      section.style.display = '';
-      section.innerHTML = `<div style="font-weight:bold;font-size:1.1em;margin-bottom:10px;">Saved Profiles</div>` +
-        keys.map(memberId => {
-          const p = profiles[memberId];
-          return `<div class="profile-list-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #222;">
-            <div style="display:flex;align-items:center;gap:12px;">
-              <span style="font-weight:bold;">${p.memberName || memberId}</span>
-              <span style="color:#888;font-size:0.95em;">(${memberId})</span>
-            </div>
-            <div>
-              <button class="view-profile-btn" data-id="${memberId}" style="background:none;border:none;color:#1e90ff;cursor:pointer;font-size:1em;margin-right:10px;">View</button>
-              <button class="delete-profile-btn" data-id="${memberId}" style="background:none;border:none;color:#ff4444;cursor:pointer;font-size:1.2em;">&#128465;</button>
-            </div>
-          </div>`;
-        }).join('');
+      section.innerHTML += keys.map(memberId => {
+        const p = profiles[memberId];
+        return `<div class="profile-list-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #222;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-weight:bold;">${p.memberName || memberId}</span>
+            <span style="color:#888;font-size:0.95em;">(${memberId})</span>
+          </div>
+          <div>
+            <button class="view-profile-btn" data-id="${memberId}" style="background:none;border:none;color:#1e90ff;cursor:pointer;font-size:1em;margin-right:10px;">View</button>
+            <button class="delete-profile-btn" data-id="${memberId}" style="background:none;border:none;color:#ff4444;cursor:pointer;font-size:1.2em;">&#128465;</button>
+          </div>
+        </div>`;
+      }).join('');
       // Add event listeners
       section.querySelectorAll('.delete-profile-btn').forEach(btn => {
         btn.onclick = function() {
@@ -77,7 +78,6 @@
     document.addEventListener('DOMContentLoaded', function() {
       const termsSection = document.getElementById('terms-section');
       const scannerSection = document.getElementById('scanner-section');
-      const profileSection = document.getElementById('profile-section');
       const proceedBtn = document.getElementById('proceedBtn');
       const acceptTerms = document.getElementById('acceptTerms');
       const addGymBtn = document.getElementById('add-gym-btn');
@@ -99,21 +99,19 @@
         scannerSection.style.display = 'none';
       }
 
-      // Only show scanner if terms accepted
-      proceedBtn.onclick = function() {
-        if (acceptTerms.checked) {
-          localStorage.setItem('termsAccepted', 'true');
-          termsSection.style.display = 'none';
-          addGymBtn.style.display = '';
-          scannerSection.style.display = 'none';
-        } else {
-          alert('You must accept the Terms and Privacy Policy to continue.');
-        }
-      };
-      addGymBtn.onclick = function() {
-        addGymBtn.style.display = 'none';
-        scannerSection.style.display = '';
-      };
+      // Only add event listeners if elements exist
+      if (proceedBtn) {
+        proceedBtn.onclick = function() {
+          if (acceptTerms && acceptTerms.checked) {
+            localStorage.setItem('termsAccepted', 'true');
+            termsSection.style.display = 'none';
+            addGymBtn && (addGymBtn.style.display = '');
+            scannerSection.style.display = 'none';
+          } else {
+            alert('You must accept the Terms and Privacy Policy to continue.');
+          }
+        };
+      }
       renderProfilesList();
     });
   </script>

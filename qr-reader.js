@@ -45,27 +45,4 @@ document.addEventListener('DOMContentLoaded', function() {
       localStorage.removeItem('memberProfile');
     }
   }
-
-  // Use html5-qrcode for scanning (like log.html)
-  const scannerDiv = document.getElementById('qrScanner');
-  scannerDiv.style.display = '';
-  scannerDiv.innerHTML = '';
-  const html5Qr = new Html5QrcodeScanner(
-    'qrScanner',
-    { fps: 10, qrbox: 220 }
-  );
-  html5Qr.render(
-    function onScanSuccess(decodedText, decodedResult) {
-      try {
-        const data = JSON.parse(decodedText);
-        console.log('QR code data:', data); // Log the values read from the QR
-        saveProfileToSet(data);
-        showProfile(data);
-        html5Qr.clear();
-      } catch {
-        scannerDiv.innerHTML = '<span style="color:red;">Invalid QR code.</span>';
-      }
-    },
-    function onScanFailure(error) {}
-  );
 });

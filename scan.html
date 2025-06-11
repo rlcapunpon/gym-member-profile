@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scan New Gym</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="profile-container">
+    <h2>Scan New Gym</h2>
+    <div id="qrScanner"></div>
+    <div id="scanStatus">Scan QR code to add a new Gym</div>
+    <button id="backBtn" style="margin-top:2em;">Back</button>
+  </div>
+  <script>
+    function saveProfileToSet(profile) {
+      let profiles = {};
+      try {
+        profiles = JSON.parse(localStorage.getItem('memberProfiles') || '{}');
+      } catch {}
+      if (profile.memberId) {
+        profiles[profile.memberId] = profile;
+        localStorage.setItem('memberProfiles', JSON.stringify(profiles));
+      }
+    }
+    function showProfile(data) {
+      if (data && data.memberId) {
+        saveProfileToSet(data);
+        window.location.href = 'profile.html?memberId=' + encodeURIComponent(data.memberId);
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      const scannerDiv = document.getElementById('qrScanner');
+      const scanStatus = document.getElementById('scanStatus');
+      const backBtn = document.getElementById('backBtn');
+      if (backBtn) {
+        backBtn.onclick = function() {
+          window.location.href = 'index.html';
+        };
+      }
+      if (!scannerDiv) return;
+      scannerDiv.style.display = '';
+      scannerDiv.innerHTML = '';
+      const html5Qr = new Html5QrcodeScanner(
+        'qrScanner',
+        { fps: 10, qrbox: 220 }
+      );
+      html5Qr.render(
+        function onScanSuccess(decodedText, decodedResult) {
+          try {
+            const data = JSON.parse(decodedText);
+            saveProfileToSet(data);
+            showProfile(data);
+            html5Qr.clear();
+          } catch {
+            scanStatus.innerHTML = '<span style="color:red;">Invalid QR code.</span>';
+          }
+        },
+        function onScanFailure(error) {}
+      );
+    });
+  </script>
+</body>
+</html>
