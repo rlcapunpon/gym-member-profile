@@ -17,15 +17,9 @@
       <button id="proceedBtn" style="padding:0.6em 1.5em;font-size:1em;border-radius:8px;border:2px solid #005fa3;background:#fff;color:#005fa3;cursor:pointer;transition:background 0.2s, color 0.2s;">Proceed</button>
     </div>
     <div id="scanner-section" class="scanner-section" style="display:none;">
-      <h2>Scan QR Code</h2>
+      <h2>New Gym</h2>
       <div id="qrScanner"></div>
-      <div id="scanStatus">Align the QR code within the frame.</div>
-    </div>
-    <div id="profile-section" class="profile-section" style="display:none;">
-      <h2>Profile</h2>
-      <div id="profileDetails"></div>
-      <div id="memberQrContainer" style="text-align:center; margin: 24px 0 0 0;"></div>
-      <button id="clearProfileBtn">Scan QR</button>
+      <div id="scanStatus">Scan QR code to add a new Gym</div>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
@@ -55,7 +49,6 @@
       } else {
         termsSection.style.display = '';
         scannerSection.style.display = 'none';
-        profileSection.style.display = 'none';
       }
 
       // Only show scanner if terms accepted

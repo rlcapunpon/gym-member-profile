@@ -64,14 +64,21 @@
       window.location.href = 'index.html';
     };
     document.addEventListener('DOMContentLoaded', function() {
-      const saved = localStorage.getItem('memberProfile');
-      if (saved) {
+      // Get memberId from query string
+      function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
+      const memberId = getQueryParam('memberId');
+      let profile = null;
+      if (memberId) {
         try {
-          const data = JSON.parse(saved);
-          showProfile(data);
-        } catch {
-          document.getElementById('profileDetails').innerHTML = '<span style="color:red;">Invalid profile data.</span>';
-        }
+          const profiles = JSON.parse(localStorage.getItem('memberProfiles') || '{}');
+          profile = profiles[memberId];
+        } catch {}
+      }
+      if (profile) {
+        showProfile(profile);
       } else {
         document.getElementById('profileDetails').innerHTML = '<span style="color:red;">No profile found.</span>';
       }
