@@ -44,11 +44,23 @@
       }
       section.innerHTML += keys.map(memberId => {
         const p = profiles[memberId];
+        // Check for expiration
+        let alertIcon = '';
+        if (p && p.expiryDate) {
+          const now = new Date();
+          const expiry = new Date(p.expiryDate);
+          const diffDays = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+          if (diffDays < 0) {
+            alertIcon = '<span title="Membership expired" style="color:#ff4444;font-size:1.3em;margin-left:6px;">&#9888;</span>';
+          } else if (diffDays <= 2) {
+            alertIcon = '<span title="Membership expiring soon" style="color:#ffae42;font-size:1.3em;margin-left:6px;">&#9888;</span>';
+          }
+        }
         return `<div class="profile-list-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #222;">
           <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-weight:bold;">${p.gymName || 'Unknown Gym'} (${memberId})</span>
+            <span style="font-weight:bold;">${p.gymName || 'Unknown Gym'} (${memberId})${alertIcon}</span>
           </div>
-          <div>
+          <div style="display: flex;">
             <button class="view-profile-btn" data-id="${memberId}" style="background:none;border:none;color:#1e90ff;cursor:pointer;font-size:1em;margin-right:10px;">View</button>
             <button class="delete-profile-btn" data-id="${memberId}" style="background:none;border:none;color:#ff4444;cursor:pointer;font-size:1.2em;">&#128465;</button>
           </div>

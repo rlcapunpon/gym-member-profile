@@ -59,6 +59,25 @@
         label.textContent = 'Login QR';
         qrContainer.appendChild(label);
       }
+      // Expiry warning for membership
+      if (data.memberShipExpirationDate) {
+        const now = new Date();
+        const expiry = new Date(data.memberShipExpirationDate);
+        if (expiry < now) {
+          detailsDiv.innerHTML += `<div style="color:#ff4444;font-weight:bold;font-size:1.1em;margin-top:18px;text-align:center;">Membership expired. If you would like to renew your membership, kindly proceed to the front desk.</div>`;
+        }
+      }
+      // Access renewal warning
+      if (data.accessRenewalDate) {
+        const now = new Date();
+        const renewal = new Date(data.accessRenewalDate);
+        const diffDays = Math.ceil((renewal - now) / (1000 * 60 * 60 * 24));
+        if (diffDays < 0) {
+          detailsDiv.innerHTML += `<div style="color:#ff4444;font-weight:bold;font-size:1.1em;margin-top:18px;text-align:center;">Access expired! Please visit the front desk to extend your access and keep the gains going 💪.</div>`;
+        } else if (diffDays <= 2) {
+          detailsDiv.innerHTML += `<div style="color:#ffae42;font-weight:bold;font-size:1.05em;margin-top:18px;text-align:center;">Heads up! Your gym access will need renewal soon. Swing by the front desk for a quick extension and keep crushing your goals! 🏋️‍♂️</div>`;
+        }
+      }
     }
     document.getElementById('backBtn').onclick = function() {
       window.location.href = 'index.html';
@@ -77,6 +96,7 @@
           profile = profiles[memberId];
         } catch {}
       }
+      // Show profile details
       if (profile) {
         showProfile(profile);
       } else {
